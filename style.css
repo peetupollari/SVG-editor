@@ -1,0 +1,329 @@
+/* *{
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: rgb(29, 29, 29);
+} */
+
+/* ----------------------------- */
+/* Root variables & base sizing  */
+/* ----------------------------- */
+:root {
+  --bg: #050505;
+  --card: #111111;
+  --muted: #5a5a5a;
+  --accent: #00aeff;
+
+  /* Keep root fluid so the canvas and other parts can remain responsive if you want */
+  font-size: calc(12px + 0.35vw);
+}
+
+/* ----------------------------- */
+/* Global box-sizing             */
+/* ----------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ----------------------------- */
+/* Page / body                   */
+/* ----------------------------- */
+html,
+body {
+  height: 100%;
+  margin: 0px;
+  background: var(--bg);
+  color: #8d8d8d;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  font-weight: 700;
+}
+
+/* ----------------------------- */
+/* Layout: always side-by-side   */
+/* (never stack)                 */
+/* ----------------------------- */
+#wrap {
+  display: flex;
+  gap: 12px;
+  height: 100vh;        /* full viewport height */
+  padding: 18px;
+  align-items: stretch;
+  flex-wrap: nowrap;    /* important: prevent wrapping/stacking */
+  overflow: auto;       /* allow scrolling if viewport is too small */
+}
+
+/* ----------------------------- */
+/* Canvas                        */
+/* (flexible, can shrink)        */
+/* ----------------------------- */
+#canvas {
+  flex: 1 1 0;
+  min-width: 0;                     /* allow it to shrink inside the flex container */
+  background: #111111;
+  border: 1px solid #282a2e;
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: auto;
+}
+
+/* ----------------------------- */
+/* Sidebar                       */
+/* (fixed internal scale — NO fluid typography inside) */
+/* ----------------------------- */
+#sidebar {
+  /* width allowed to change within limits but the internal typography/padding stays fixed */
+  flex: 0 0 clamp(220px, 28vw, 420px);
+  min-width: 220px;
+  max-width: 420px;
+  padding: 12px;
+
+  background: var(--card);
+  border: 1px solid #282a2e;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  overflow: auto;
+
+  /* FIXED local scale: lock sidebar's font-size and sizes so children do NOT scale with root */
+  font-size: 14px;    /* fixed px value prevents fluid scaling inside the sidebar */
+  line-height: 1.2;
+}
+
+/* Override any global fluid/clamped typographic rules inside the sidebar */
+#sidebar h1 {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+
+.slider {
+  /* color */
+  accent-color: #e2e2e2;
+}
+
+.dropdown {
+  background-color: #161616;
+  color: #f0f0f0;
+  border-radius: 6px;
+  border: 1px solid #33363b;
+  padding: 6px;
+}
+
+#layerName {
+  background-color: #161616;
+  color: #f0f0f0;
+  border-radius: 6px;
+  border: 1px solid #33363b;
+  padding: 6px;
+}
+
+#strokeColor {
+  background-color: #161616;
+  color: #f0f0f0;
+  border-radius: 6px;
+  border: 1px solid #33363b;
+  padding: 2px;
+  padding-inline: 4px;
+}
+
+#strokeWidth {
+  background-color: #161616;
+  color: #f0f0f0;
+  border-radius: 6px;
+  border: 1px solid #33363b;
+  padding: 6px;
+}
+
+#closedCheckbox {
+  accent-color: var(--accent);
+}
+
+#sidebar label {
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+  display: block;
+}
+
+#sidebar .muted {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+#sidebar .muted-small {
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+#gridX, #gridY {
+  width: 60px;
+  background-color: #161616;
+  color: #f0f0f0;
+  border-radius: 6px;
+  border: 1px solid #33363b;
+  padding: 6px;
+}
+
+/* Buttons and controls inside sidebar use ems (relative to the fixed 14px) */
+#sidebar button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #404244;
+  background: #1b1b1b;
+  color: white;
+  cursor: pointer;
+  font-size: 0.95em; /* relative to sidebar's fixed font-size */
+  transition: 200ms;
+}
+
+#sidebar button:hover {
+  background: #2b3033;
+  border: 1px solid #8e99a5;
+}
+
+#sidebar button:active {
+  background: #3b4043;
+  border: 1px solid #5b6269;
+}
+
+/* Form controls inside sidebar (fixed sizing behavior) */
+#sidebar input[type="range"],
+#sidebar input[type="color"],
+#sidebar input[type="number"],
+#sidebar input[type="text"],
+#sidebar select,
+#sidebar textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 0.95em; /* keep readable and fixed */
+}
+
+/* Textarea fixed height (px-based so it won't scale) */
+#sidebar textarea {
+  height: 100px;
+  margin-top: 8px;
+  font-family: monospace;
+  font-size: 12px;
+  resize: none;
+  background-color: #161616;
+  color: #f0f0f0;
+  border-radius: 6px;
+  border: 1px solid #33363b;
+}
+
+/* List items / layer items - px-based paddings so they remain consistent */
+#sidebar ul {
+  padding-left: 12px;
+  max-height: 160px;
+  overflow: auto;
+  margin: 8px 0;
+}
+
+#sidebar li.layer-item {
+  margin: 6px 0;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+#sidebar li.layer-item.selected {
+  background: linear-gradient(
+    90deg,
+    rgba(11, 92, 255, 0.06),
+    rgba(11, 92, 255, 0.03)
+  );
+  border: 1px solid rgba(11, 92, 255, 0.06);
+}
+
+/* Sidebar-specific utility classes using px/em so they don't pick up root scaling */
+#sidebar .small {
+  width: 72px;
+}
+
+#sidebar .tiny {
+  width: 42px;
+}
+
+/* ----------------------------- */
+/* Canvas / Global fluid styles  */
+/* ----------------------------- */
+h1 {
+  /* global h1 outside sidebar (if any) */
+  font-size: clamp(16px, 1.1rem + 0.6vw, 20px);
+  margin: 0 0 12px;
+}
+
+label {
+  font-size: clamp(12px, 0.9rem + 0.2vw, 14px);
+  margin-bottom: 6px;
+  display: block;
+}
+
+button {
+  /* global buttons (outside sidebar) can still be fluid relative to root */
+  padding: 0.5em 0.8em;
+  border-radius: 6px;
+  border: 1px solid #cfd8e3;
+  background: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+/* SVG preview and canvas elements use percentage sizing and can remain responsive */
+svg.preview {
+  display: block;
+  width: 300px;
+  height: 300px;
+  border: 1px dashed #33363b;
+  border-radius: 6px;
+  background: #161616;
+  margin-bottom: 8px;
+}
+
+
+/* Flex rows (global) */
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.row-gap10 {
+  gap: 10px;
+}
+
+.row-gap6 {
+  gap: 6px;
+}
+
+/* ----------------------------- */
+/* Keep the layout side-by-side   */
+/* on very small viewports        */
+/* ----------------------------- */
+@media (max-width: 420px) {
+  /* reduce paddings so the side-by-side layout fits better, but keep order */
+  #wrap {
+    gap: 8px;
+    padding: 6px;
+  }
+
+  #canvas,
+  #sidebar {
+    padding: 8px;
+  }
+
+  /* keep sidebar font-size locked so contents remain the same visual scale */
+  #sidebar {
+    font-size: 14px;
+  }
+
+  /* slightly shrink global root so canvas can remain usable if desired */
+  :root {
+    font-size: calc(11px + 0.2vw);
+  }
+}

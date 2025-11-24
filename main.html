@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Layered Canvas → SVG editor (full)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- <h1>Layered Canvas → SVG editor</h1> -->
+
+  <div id="wrap">
+    <canvas id="canvas" tabindex="0"></canvas>
+
+    <div id="sidebar">
+        <label>Layer settings</label>
+      <div class="controls">
+        <button id="addLayerBtn">+ Layer</button>
+        <button id="deleteLayerBtn">Delete</button>
+        <button id="moveUpBtn" title="Move selected layer up">↑</button>
+        <button id="moveDownBtn" title="Move selected layer down">↓</button>
+        <button id="undoBtn" title="Undo" disabled>Undo</button>
+        <button id="redoBtn" title="Redo" disabled>Redo</button>
+      </div>
+
+      <ul id="layersList"></ul>
+
+      <div class="mt8">
+        <div class="row row-gap10">
+          <input id="layerName" type="text" placeholder="Layer name" />
+          <div style="width:110px;">
+            <div class="row gap6">
+              <input id="strokeColor" type="color" value="#0b5cff">
+              <input id="strokeWidth" type="number" min="1" max="100" value="2" />
+            </div>
+            <div class="muted-small">color · width</div>
+            <br>
+          </div>
+        </div>
+
+        <div class="row mt8">
+          <label class="checkbox"><input id="closedCheckbox" type="checkbox"> Connect first & last</label>
+          <label class="checkbox" title="Hide layer"><input id="visibleCheckbox" type="checkbox" checked hidden></label>
+        </div>
+
+        <div class="mt8">
+          <label>Corner smoothing</label>
+          <input class="slider" id="smoothingSlider" type="range" min="0" max="200" value="0">
+          <div class="muted">: <span id="smoothingValue">-</span></div>
+        </div>
+
+        <div class="control-row">
+          <label for="lineCapSelect">Line ends:</label>
+          <select class="dropdown" id="lineCapSelect" title="Choose line end style">
+            <option value="round" selected>Round</option>
+            <option value="butt">Sharp</option>
+            <option value="square">Square</option>
+          </select>
+        </div>
+
+
+        <div class="mt10">
+          <label>Grid</label>
+          <div class="row">
+            <div class="flex1">
+              <div class="muted-small">X spacing</div>
+              <input id="gridX" type="number" min="4" max="400" value="32" />
+            </div>
+            <div class="flex1">
+              <div class="muted-small">Y spacing</div>
+              <input id="gridY" type="number" min="4" max="400" value="32" />
+            </div>
+          </div>
+
+          <div class="row mt8">
+            <label class="checkbox"><input id="snapCheckbox" type="checkbox"> Snap to grid</label>
+            <div class="flex1">
+              <div class="muted-small">Other layers opacity</div>
+              <input class="slider" id="otherOpacity" type="range" min="0.05" max="1" step="0.05" value="0.28">
+            </div>
+          </div>
+
+          <div class="mt8">
+            <label>Movement constraint</label>
+            <select class="dropdown" id="movementMode">
+              <option value="free">Free</option>
+              <option value="horizontal">Horizontal only</option>
+              <option value="vertical">Vertical only</option>
+              <option value="diagonal">Diagonal only (±45°)</option>
+            </select>
+            <div class="muted-small">Use this while dragging points</div>
+          </div>
+        </div>
+
+        <div class="mt12">
+          <label>Preview & export</label>
+          <svg id="previewSvg" class="preview" xmlns="http://www.w3.org/2000/svg"></svg>
+          <!-- put this in your sidepanel where you want the controls -->
+          <div id="preview-controls" class="panel-block">
+            <h4>Preview transform</h4>
+
+            <label>
+              Scale
+              <input class="slider" id="previewScale" type="range" min="0.1" max="3" step="0.01" value="1">
+              <span id="previewScaleVal">1.00</span>
+            </label>
+
+            <label>
+              Offset X (%)
+              <input class="slider" id="previewOffsetX" type="range" min="-50" max="50" step="0.5" value="0">
+              <span id="previewOffsetXVal">0%</span>
+            </label>
+
+            <label>
+              Offset Y (%)
+              <input class="slider" id="previewOffsetY" type="range" min="-50" max="50" step="0.5" value="0">
+              <span id="previewOffsetYVal">0%</span>
+            </label>
+
+            <div style="margin-top:8px;">
+              <button id="previewFitBtn" type="button">Fit (center)</button>
+              <button id="previewResetBtn" type="button">Reset</button>
+            </div>
+          </div>
+
+          <div class="row gap8">
+            <button id="downloadSvgBtn">Download SVG</button>
+            <button id="exportBtn">Export JSON</button>
+            <button id="clearLayerBtn">Clear Layer</button>
+          </div>
+          <div class="mt8">
+            <label>Combined SVG output</label>
+            <textarea id="pathOutput" readonly placeholder="SVG markup for all layers"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="hint">
+        Interactions: left-click empty canvas to add a point (starts dragging); drag to move; double-click to delete a point. Only the selected layer is editable.
+      </div>
+    </div>
+  </div>
+
+  <script src="javasc.js"></script>
+</body>
+</html>

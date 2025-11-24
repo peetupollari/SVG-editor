@@ -1,0 +1,191 @@
+/* mainstyle.css — Dashboard styles (top-left stack + centered "Create New SVG")
+   Dark glass look, Inter font, responsive and accessible
+*/
+
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root{
+  --bg: #050505;
+  --bg-2: #0a0a0a;
+  --panel: #0e0e0eb8;
+  --border: #1f1f1f;
+  --accent: #00aeff;
+  --accent-pressed: #0081bd;
+  --text: #ffffff;
+  --muted: #b4b4b4;
+  --radius-lg: 14px;
+  --radius-sm: 8px;
+  --glass-blur: 10px;
+  --shadow-lg: 0 18px 50px rgba(0,0,0,0.6);
+  --shadow-sm: 0 6px 18px rgba(0,0,0,0.45);
+  --gap: 1rem;
+  --transition: 180ms ease;
+  --left-width: 460px; /* width of left column (user info stack) */
+}
+
+/* page layout: using CSS Grid so we can place items top-left and center the CTA */
+html,body{
+  background: linear-gradient(180deg, #070707 0%, #050505 100%);
+  color: var(--text);
+}
+
+
+
+.content{
+  height: 100vh;
+  display: flex;
+  /* left column fixed-ish, right column flexible */
+  grid-template-columns: minmax(280px, var(--left-width)) 1fr;
+  gap: 30vw;
+  padding: 1rem;
+}
+
+/* Top-left stack:
+   - #userInfo goes to grid row 1
+   - #profileExtra goes to grid row 2 (below userInfo)
+   - .button goes to grid row 3 (below both)
+*/
+#userInfo{
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.sidepanel{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 500px;
+  height: 96.5vh;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+}
+
+/* Sign-out button sits under the two blocks in the left column */
+.button{
+  margin-top: 5rem;
+  width: 100%;
+  padding: 0.7rem 1.2rem;
+  border-radius: 999px;
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  box-shadow: var(--shadow-sm);
+  transition: 300ms;
+}
+
+/* Centered "Create New SVG" CTA in the middle area */
+a[href="main.html"]{
+  /* place centered in the second column, vertically centered in the grid area */
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+  justify-self: center;
+  align-self: center;
+  display: inline-block;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 0.9rem 1.25rem;
+  border-radius: 999px;
+  border: 2px solid #009bdd;
+  transition: 300ms;
+}
+
+/* Hover / active effects */
+.button:hover{
+  background: var(--accent);
+  color: var(--bg);
+  outline: 3px solid rgba(0,174,255,0.14);
+  outline-offset: 3px;
+}
+.button:active{
+  background: var(--accent-pressed);
+  border-color: #009bdd;
+}
+
+a[href="main.html"]:hover{
+  background-color: #0081bd;
+  color: var(--bg);
+  padding: 1.5rem 2rem;
+  transform: translateX(-0.6rem);
+}
+
+/* Typography inside userInfo */
+#userInfo p{
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.4;
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+#userInfo p strong{
+  color: var(--text);
+  font-weight: 700;
+  min-width: 7.5rem;
+  display: inline-block;
+  font-size: 0.95rem;
+}
+#userInfo p span{
+  color: var(--muted);
+  font-weight: 500;
+  word-break: break-all;
+}
+
+/* Accessibility focus outlines */
+.button:focus, a:focus, #userInfo p span:focus {
+  outline: 3px solid rgba(0,174,255,0.14);
+  outline-offset: 3px;
+}
+
+/* Responsive fallback: small screens become single-column vertical layout */
+@media (max-width: 720px) {
+  body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1rem;
+    gap: 0.9rem;
+  }
+  /* full-width stacked items */
+  #userInfo, #profileExtra, .button, a[href="main.html"]{
+    width: 100%;
+    max-width: 720px;
+  }
+  a[href="main.html"]{
+    order: 4; /* keep CTA near bottom on very small screens if you prefer */
+  }
+}
+
+/* Utility classes */
+.hidden { display: none !important; }
+.center { text-align: center; }
+
+/* Optional separator */
+.sep {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+  margin: 0.6rem 0;
+}
+
+/* End of file */
