@@ -70,9 +70,10 @@ onAuthStateChanged(auth, async (user) => {
 document.getElementById('button').addEventListener('click', async () => {
   try {
     await signOut(auth);
-    window.location.replace('main.html');
+    window.location.replace('index.html');
   } catch (err) {
     document.getElementById('mainMessage').textContent = 'Sign-out failed: ' + err.message;
     console.error(err);
   }
 });
+
