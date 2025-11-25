@@ -76,3 +76,12 @@ document.getElementById('button').addEventListener('click', async () => {
     console.error(err);
   }
 });
+
+  // Delete-account
+  document.getElementById('button-delete-ac').addEventListener('click', async () => {
+    try {
+      await user?.delete();
+      window-location.replace('index.html');
+    }
+});
+
