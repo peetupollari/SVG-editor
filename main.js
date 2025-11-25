@@ -77,11 +77,12 @@ document.getElementById('button').addEventListener('click', async () => {
   }
 });
 
-  // Delete-account
-  document.getElementById('button-delete-ac').addEventListener('click', async () => {
-    try {
-      await user?.delete();
-      window-location.replace('index.html');
-    }
-});
+//   // Delete-account
+//   document.getElementById('button-delete-ac').addEventListener('click', async () => {
+//     try {
+//       await user?.delete();
+//       window-location.replace('index.html');
+//     }
+// });
+
 
