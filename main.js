@@ -1,26 +1,26 @@
 // main.js
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 import {
   getAuth,
   onAuthStateChanged,
-  signOut,
-  deleteUser
+  signOut
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
+// OPTIONAL: if you want to load extra profile data from Firestore
 import {
   getFirestore,
   doc,
-  getDoc,
-  deleteDoc
+  getDoc
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDBQn-9zj0rQnTRf7wmVNB2xWzNzaggaPk",
   authDomain: "website-64725.firebaseapp.com",
   projectId: "website-64725",
-  storageBucket: "website-64725.appspot.com",
+  storageBucket: "website-64725.firebasestorage.app",
   messagingSenderId: "160443299665",
-  appId: "1:160443299665:web:d537fb65e20fc570"
+  appId: "1:160443299665:web:d537fb65a57e64e20fc570"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -39,6 +39,11 @@ onAuthStateChanged(auth, async (user) => {
 
   // Fill basic auth data
   el('userEmail').textContent = user.email ?? '—';
+  // el('userUid').textContent = user.uid;
+  // el('userName').textContent = user.displayName ?? '—';
+  // el('userProviders').textContent = (user.providerData && user.providerData.length)
+  //   ? user.providerData.map(p => p.providerId).join(', ')
+  //   : '—';
   el('userCreated').textContent = user.metadata?.creationTime
     ? new Date(user.metadata.creationTime).toLocaleString()
     : '—';
@@ -52,8 +57,9 @@ onAuthStateChanged(auth, async (user) => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
-      // You can show it somewhere if you want
-      console.log("Extra profile data:", data);
+      el('profileExtra').innerHTML = `<h3>Extra profile data</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+    } else {
+      el('profileExtra').innerHTML = `<p>No extra profile data found in Firestore.</p>`;
     }
   } catch (err) {
     console.warn('Could not fetch Firestore profile:', err);
@@ -61,47 +67,12 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 // Sign-out
-document.getElementById('button-signout').addEventListener('click', async () => {
+document.getElementById('button').addEventListener('click', async () => {
   try {
     await signOut(auth);
     window.location.replace('index.html');
   } catch (err) {
-    el('mainMessage').textContent = 'Sign-out failed: ' + err.message;
+    document.getElementById('mainMessage').textContent = 'Sign-out failed: ' + err.message;
     console.error(err);
-  }
-});
-
-// Delete account
-document.getElementById('button-delete').addEventListener('click', async () => {
-  const user = auth.currentUser;
-  if (!user) {
-    el('mainMessage').textContent = 'No user is signed in.';
-    return;
-  }
-
-  // Optional: ask for confirmation
-  const confirmed = confirm("Are you sure you want to permanently delete your account? This action cannot be undone.");
-  if (!confirmed) return;
-
-  try {
-    // If you also want to delete Firestore data:
-    // await deleteDoc(doc(db, 'users', user.uid));
-
-    // Delete the Auth user
-    await deleteUser(user);
-    
-    // On success: redirect or show message
-    el('mainMessage').textContent = 'Account deleted successfully.';
-    // Perhaps redirect to home or signup page:
-    window.location.replace('index.html');
-  } catch (error) {
-    console.error("Error deleting user:", error);
-    // Handle specific error
-    if (error.code === 'auth/requires-recent-login') {
-      el('mainMessage').textContent = 'Please sign in again and then try deleting your account.';
-      // Here, you might prompt the user to reauthenticate
-    } else {
-      el('mainMessage').textContent = 'Failed to delete account: ' + error.message;
-    }
   }
 });
